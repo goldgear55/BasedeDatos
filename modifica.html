@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+
+    <title>Modificar Electrodoméstico</title>
+
+    <script type="module" src="lib/js/consumeJson.js"></script>
+    <script type="module" src="lib/js/submitForm.js"></script>
+    <script type="module" src="lib/js/muestraObjeto.js"></script>
+    <script type="module" src="lib/js/muestraError.js"></script>
+
+    <script>
+        // Obtiene los parámetros de la página.
+        const params = new URL(location.href).searchParams;
+    </script>
+
+</head>
+
+<body onload="if (params.size > 0) {
+    consumeJson('srv/electrodomestico.php?' + params)
+        .then(respuesta => muestraObjeto(forma, respuesta.body))
+        .catch(muestraError)
+}">
+
+    <form id="forma" onsubmit="submitForm('srv/electrodomestico-modifica.php', event)
+        .then(respuesta => location.href = 'index.html')
+        .catch(muestraError)">
+
+        <h1>Modificar Electrodoméstico</h1>
+
+        <p><a href="index.html">Cancelar</a></p>
+
+        <input name="id" type="hidden">
+
+        <p>
+            <label>
+                Nombre *
+                <input name="nombre" value="Cargando&hellip;" required>
+            </label>
+        </p>
+
+        <p>
+            <label>
+                Precio *
+                <input name="precio" type="number" step="0.01" value="Cargando&hellip;" required>
+            </label>
+        </p>
+
+        <p>
+            <label>
+                Color *
+                <input name="color" value="Cargando&hellip;" required>
+            </label>
+        </p>
+
+        <p>* Obligatorio</p>
+
+        <p>
+
+            <button type="submit">Guardar</button>
+
+            <button type="button" onclick="
+                if (params.size > 0 && confirm('Confirma la eliminación')) {
+                    consumeJson('srv/electrodomestico-elimina.php?' + params)
+                        .then(() => location.href = 'index.html')
+                        .catch(muestraError)
+                }">
+                Eliminar
+            </button>
+
+        </p>
+
+    </form>
+
+</body>
+
+</html>
